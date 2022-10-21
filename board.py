@@ -1,6 +1,7 @@
 import random
 import tkinter
 import json
+import ship_setup
 from ship_setup import HORIZONTAL, VERTICAL
 
 
@@ -216,6 +217,8 @@ class GameBoard(Board):
         # Only needed for computer's board, so that the computer can call the human board's shoot method
         self.ships = ships_list
         self.available_coordinates = []
+        self.hit_target = False  # Used in Difficult Mode algorithm
+        self.last_shot = ()  # Used in Difficult Mode algorithm
 
     def draw_game_field(self, location):
 
@@ -268,6 +271,7 @@ class GameBoard(Board):
                 self.button = self.button_class(self.game_field)
                 self.button.hit_target(row, column)
                 self.button.configure(command=self.already_shot)
+                self.hit_target = True  # Used in Difficult Mode algorithm
                 self.message_text.set("You hit a ship!")
                 if vessel.is_sunk:
                     self.ships.remove(vessel)  # removing the ship from the list of ship.
@@ -282,12 +286,44 @@ class GameBoard(Board):
             self.button.miss_target(row, column)
             self.button.configure(command=self.already_shot)
             self.message_text.set("No ship at these coordinates!")
+            self.hit_target = False
 
         if self.player == "human":
             self.button["state"] = "disabled"   # disabling the buttons of the human board
         else:
             # Computer shoot method called at the end of every human turn.
-            rand_row, rand_col = random.choice(self.available_coordinates)
-            self.opponent.shoot(rand_row, rand_col)
-            self.available_coordinates.remove((rand_row, rand_col))
-            # removing shoot coordinates from list of available coordinates
+            def shoot_random():
+                rand_row, rand_col = random.choice(self.available_coordinates)
+                self.opponent.shoot(rand_row, rand_col)
+                self.available_coordinates.remove((rand_row, rand_col))
+                # removing shoot coordinates from list of available coordinates
+                self.opponent.last_shot = (rand_row, rand_col)  # Only needed for Difficult Mode
+            if ship_setup.difficulty_level == "Easy":
+                # Easy mode - shoot at random
+                shoot_random()
+            else:
+                # Difficult mode - if a hit is ship - shoot next to it
+                if not self.opponent.hit_target:
+                    # If no ship was hit - shoot at random.
+                    shoot_random()
+                else:
+                    last_row, last_column = self.opponent.last_shot
+                    adjacent_coordinates = [(last_row, last_column + 1), (last_row, last_column - 1),
+                                            (last_row - 1, last_column), (last_row + 1, last_column)]
+                    # Converting to set for more efficient search:
+                    available_coordinates_set = set(self.available_coordinates)
+                    for coordinate in adjacent_coordinates:
+                        if coordinate in available_coordinates_set:
+                            self.opponent.shoot(*coordinate)
+                            self.available_coordinates.remove(coordinate)
+                            if self.opponent.hit_target:
+                                # Saving coordinates only if ship's been hit
+                                # Otherwise want to keep shooting around previous hit
+                                self.opponent.last_shot = coordinate
+                            else:
+                                # Changing back to True, so that it can continue shooting original adjacent coords.
+                                self.opponent.hit_target = True
+                            break
+                    else:
+                        shoot_random()  # if none of the adjacent coordinates is available -> shoot at random
+
