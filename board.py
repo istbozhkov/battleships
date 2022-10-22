@@ -42,10 +42,14 @@ class Board:
                 else:
                     self.button["state"] = "disabled"
 
-        self.message_text.set("Hello!") # TODO change later
-        self.message_field = tkinter.Label(self.window, textvariable=self.message_text)
-        self.message_field.grid(row=self.size + 1, column=1+start_cell, columnspan=self.size + 2, sticky="nw")
-        # # TODO make sure it still works for different field sizes
+    def draw_message_field(self, initial_message, start_cell):
+        self.message_text.set(initial_message)
+        border_color = tkinter.Frame(self.window, background="green")
+        border_color.grid(row=self.size + 1, column=1+start_cell, padx=25, pady=5)
+        self.message_field = tkinter.Label(border_color, textvariable=self.message_text,
+                                           font=("Lucida Sans Typewriter", 9, "bold"), bg="black", fg="green",
+                                           anchor="w", width=40, bd=0)
+        self.message_field.pack(padx=1, pady=1)
 
 
 class SetUpBoard(Board):
@@ -70,6 +74,7 @@ class SetUpBoard(Board):
         start_cell = 0  # Only showing human player's board, so start cell is always 0
 
         super().draw_field(button_function=self.place_ship, start_cell=start_cell)
+        super().draw_message_field(initial_message="Choose a coordinate to place a ship...", start_cell=start_cell)
 
         # ---- The remainder of this function sets up the settings field:
 
@@ -118,6 +123,7 @@ class SetUpBoard(Board):
                 self.latest_rb = rb3
             else:
                 self.latest_rb = rb4
+            self.message_text.set("Choose a coordinate to place a ship...")
 
         # Ship orientation radio buttons and label:
         tkinter.Label(settings_field, text="Select ship orientation", font=("Arial Bold", 10), anchor='s', height=2) \
@@ -139,7 +145,7 @@ class SetUpBoard(Board):
     def place_ship(self, row, column):
         is_placed = False
         if self.latest_rb["state"] == "disabled":   # Checking whether user has chosen a new ship to place.
-            pass    # TODO Display message here
+            self.message_text.set("Choose another ship to place")
         else:
             # Checking if ship can be placed entirely within field boundaries:
             if (self.ship_orientation.get() == HORIZONTAL and (self.size - column) >= self.ship_size.get()) or \
@@ -152,6 +158,7 @@ class SetUpBoard(Board):
                         # Checking to see if there is a ship in the way
                         if (row, column+i) in self.placed_ships_coordinates:
                             # A ship is in the way -> breaking the loop, so the else statement won't get executed.
+                            self.message_text.set("There is another ship in the way!")
                             break
                     else:
                         for i in range(self.ship_size.get()):
@@ -174,8 +181,8 @@ class SetUpBoard(Board):
                         # Checking to see if there is a ship in the way
                         if (row+i, column) in self.placed_ships_coordinates:
                             # A ship has been placed -> breaking the loop, so the else statement won't get executed.
+                            self.message_text.set("There is another ship in the way!")
                             break
-                            # TODO: display message
                     else:
                         # adding placed ship column to "taken" coordinates:
                         for i in range(self.ship_size.get()):
@@ -193,7 +200,7 @@ class SetUpBoard(Board):
                             self.placed_ships_coordinates.add((row+i, column))
                         is_placed = True
             else:
-                pass    # TODO display message here
+                self.message_text.set("Ship must be entirely within the field!")
 
         if is_placed:
             self.latest_rb["state"] = "disabled"
@@ -206,6 +213,12 @@ class SetUpBoard(Board):
             })
             with open("ships_config.json", "w", encoding="utf-8") as ships_file:
                 json.dump(self.ship_configuration_list, ships_file)
+
+            if self.ship_qty:
+                self.message_text.set("Choose another ship to place")
+            else:
+                # if all ships are already placed
+                self.message_text.set("Press Start to start the game")
 
         if self.ship_qty == 0:
             self.button_start["state"] = "active"
@@ -258,10 +271,12 @@ class GameBoard(Board):
                     self.button = self.button_class(self.game_field)
                     self.button.ship_display(row=coordinate[0], column=coordinate[1], picture=picture)
                     self.button["state"] = "disabled"
+        else:   # showing message field under computer's board:
+            super().draw_message_field(initial_message="Choose a coordinate to shoot at...", start_cell=start_cell)
 
     def already_shot(self):
         #   Displays a relevant message if user shoots twice at the same coordinates.
-        self.message_text.set("You have already shot at this coordinate. Try again!")
+        self.message_text.set("Already shot at these coordinates!")
         if self.player == "human":
             self.button["state"] = "disabled"
 
@@ -273,11 +288,12 @@ class GameBoard(Board):
                 self.button.hit_target(row, column)
                 self.button.configure(command=self.already_shot)
                 self.hit_target = True  # Used in Difficult Mode algorithm
-                self.message_text.set("You hit a ship!")
+                self.message_text.set(f"Remaining ships: {len(self.ships)}")
                 if vessel.is_sunk:
                     self.ships.remove(vessel)  # removing the ship from the list of ship.
                     # This will make it easier to check further hits
                     # and make it immediately obvious when the player / computer has lost.
+                    self.message_text.set(f"Remaining ships: {len(self.ships)}")
                     if len(self.ships) == 0:
                         self.message_text.set("You won!")
                         break
@@ -286,7 +302,7 @@ class GameBoard(Board):
             self.button = self.button_class(self.game_field)
             self.button.miss_target(row, column)
             self.button.configure(command=self.already_shot)
-            self.message_text.set("No ship at these coordinates!")
+            self.message_text.set(f"Remaining ships: {len(self.ships)}")
             self.hit_target = False
 
         if self.player == "human":

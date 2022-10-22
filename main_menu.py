@@ -5,6 +5,7 @@ import json
 # TODO save the settings in a separate file and read from it in the ship_setup file
 # Passing the settings using imports doesn't work well, due to circular references and tkinter errors.
 
+
 def run_ship_placement(difficulty: str, size: int, ships: str) -> None:
     """
     Save settings to a json file, run ship placement module and destroy main menu window.
@@ -28,7 +29,7 @@ def run_ship_placement(difficulty: str, size: int, ships: str) -> None:
 # Defining board sizes:
 board_size_option1_int = 6
 board_size_option2_int = 8
-board_size_option3_int = 12
+board_size_option3_int = 10
 board_size_option1_text = str(board_size_option1_int) + "x" + str(board_size_option1_int)
 board_size_option2_text = str(board_size_option2_int) + "x" + str(board_size_option2_int)
 board_size_option3_text = str(board_size_option3_int) + "x" + str(board_size_option3_int)
