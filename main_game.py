@@ -5,14 +5,29 @@ import ship
 import board
 import json
 import random
+import os
 
 # TODO protect variable by adding _ at the start
 # TODO add validation checks for all variables
 
-# comp_ship1 = ship.Ship(start_row=3, start_column=ship_setup.board_size+4, orientation="horizontal", length=2)
-# comp_ship2 = ship.Ship(start_row=1, start_column=ship_setup.board_size+2, orientation="vertical", length=4)
-# comp_ship3 = ship.Ship(start_row=5, start_column=ship_setup.board_size+6, orientation="horizontal", length=2)
-#
+
+def human_victory():
+    run_end_game_screen("human")
+
+
+def computer_victory():
+    run_end_game_screen("computer")
+
+
+def run_end_game_screen(victory):
+    with open('end_game.json', 'w', encoding="utf-8") as file:
+        # If PvP functionality is needed, also add location to the victory variable
+        json.dump(victory, file)
+    # ship_setup.mainWindow.destroy()
+    os.system("python game_over.py")   # running the python command on cmd to execute both windows
+    # it must be done this way, as if we simply import it, both windows will open simultaneously.
+
+
 ships = {"human": [], "computer": []}
 
 
@@ -88,11 +103,13 @@ for item in ships_settings:
     ships["human"].append(new_ship)
 
 human_board = board.GameBoard(size=ship_setup.board_size, window=ship_setup.mainWindow,
-                              button_class=btn.Btn, ships_list=ships["human"], player="human")
+                              button_class=btn.Btn, end_game_function=computer_victory,
+                              ships_list=ships["human"], player="human")
 human_board.draw_game_field(ship_setup.field_location_human)
 
 computer_board = board.GameBoard(size=ship_setup.board_size, window=ship_setup.mainWindow,
-                                 button_class=btn.Btn, opponent=human_board, ships_list=ships["computer"], player="computer")
+                                 button_class=btn.Btn, end_game_function=human_victory,
+                                 opponent=human_board, ships_list=ships["computer"], player="computer")
 computer_board.draw_game_field(ship_setup.field_location_computer)
 
 # for testing:
