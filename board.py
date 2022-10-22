@@ -66,6 +66,7 @@ class SetUpBoard(Board):
     def draw_placement_field(self, run_function):
         self.ship_qty = len(self.ship_configuration)  # Must be initialized here, in case the Clear button is pressed.
         self.ship_configuration_list = []   # Zeroing here in case the Clear button is pressed.
+        self.placed_ships_coordinates = set()   # Zeroing here in case the Clear button is pressed.
         start_cell = 0  # Only showing human player's board, so start cell is always 0
 
         super().draw_field(button_function=self.place_ship, start_cell=start_cell)
