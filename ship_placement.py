@@ -1,7 +1,6 @@
 import tkinter
 import ship_setup
 import board
-import ship
 import btn
 import os
 
@@ -12,7 +11,6 @@ import os
 def run_game():
     """
     Run main game module and destroy ship placement window.
-    :param filename: filename of main game module
     """
     ship_setup.mainWindow.destroy()
     os.system('python main_game.py')   # running the python command on cmd to execute both windows

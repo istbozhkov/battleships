@@ -3,6 +3,7 @@ import tkinter
 import json
 import ship_setup
 from ship_setup import HORIZONTAL, VERTICAL
+import os
 
 
 class Board:
@@ -225,11 +226,12 @@ class SetUpBoard(Board):
 
 
 class GameBoard(Board):
-    def __init__(self, size, window, ships_list: list, button_class, opponent=None, player="human"):
+    def __init__(self, size, window, ships_list: list, button_class, end_game_function, opponent=None, player="human"):
         super().__init__(size=size, window=window, button_class=button_class, player=player)
         self.opponent = opponent    # opponent's Board instance.
         # Only needed for computer's board, so that the computer can call the human board's shoot method
         self.ships = ships_list
+        self.end_game = end_game_function
         self.available_coordinates = []
         self.hit_target = False  # Used in Difficult Mode algorithm
         self.last_shot = ()  # Used in Difficult Mode algorithm
@@ -281,6 +283,12 @@ class GameBoard(Board):
             self.button["state"] = "disabled"
 
     def shoot(self, row, column):
+        """
+        Shoot at given coordinates and change tile accordingly.
+        :param row:
+        :param column:
+        :return:
+        """
         # Checking if a ship is hit.
         for vessel in self.ships:   # Named `vessel` instead of `ship` to avoid confusion with the Ship class
             if vessel.is_hit(row, column):
@@ -295,7 +303,9 @@ class GameBoard(Board):
                     # and make it immediately obvious when the player / computer has lost.
                     self.message_text.set(f"Remaining ships: {len(self.ships)}")
                     if len(self.ships) == 0:
-                        self.message_text.set("You won!")
+                        # If all ships have been sunk - run end_game function
+                        self.end_game()
+                        quit()
                         break
                 break
         else:

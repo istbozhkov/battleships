@@ -2,9 +2,6 @@ import tkinter
 import os
 import json
 
-# TODO save the settings in a separate file and read from it in the ship_setup file
-# Passing the settings using imports doesn't work well, due to circular references and tkinter errors.
-
 
 def run_ship_placement(difficulty: str, size: int, ships: str) -> None:
     """
