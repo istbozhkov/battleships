@@ -2,9 +2,11 @@
 
 Battleships game written on Python, using TKinter - Python's standard GUI framework. Player vs Computer gameplay.
 
+![alt text](https://github.com/istbozhkov/battleships/blob/main/demo.jpg "demo picture")
+
 ## Usage
 
-You now start the game by running:
+You can start the game by running:
 ```sh
 ~ python main_menu.py
 ```
