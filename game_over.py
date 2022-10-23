@@ -8,7 +8,6 @@ def new_game():
     Start new game and destroy main_game and game_over window.
     """
     game_over_window.destroy()
-    # ship_setup.mainWindow.destroy()
     os.system('python main_menu.py')   # running the python command on cmd to execute both windows
     # it must be done this way, as if we simply import it, both windows will open simultaneously.
 

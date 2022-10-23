@@ -23,7 +23,7 @@ def run_end_game_screen(victory):
     with open('end_game.json', 'w', encoding="utf-8") as file:
         # If PvP functionality is needed, also add location to the victory variable
         json.dump(victory, file)
-    # ship_setup.mainWindow.destroy()
+    ship_setup.mainWindow.destroy()
     os.system("python game_over.py")   # running the python command on cmd to execute both windows
     # it must be done this way, as if we simply import it, both windows will open simultaneously.
 
@@ -78,7 +78,6 @@ for length in ship_setup.ship_configuration:
                             (coordinate[0] + length > taken_coordinate[0] >= coordinate[0]):
                         coordinates.remove(coordinate)
                         break   # break once coordinate is removed
-    print(coordinates)
     random_coordinate = random.choice(coordinates)
     new_ship = ship.Ship(start_row=random_coordinate[0],
                          start_column=random_coordinate[1],
@@ -111,13 +110,5 @@ computer_board = board.GameBoard(size=ship_setup.board_size, window=ship_setup.m
                                  button_class=btn.Btn, end_game_function=human_victory,
                                  opponent=human_board, ships_list=ships["computer"], player="computer")
 computer_board.draw_game_field(ship_setup.field_location_computer)
-
-# for testing:
-for i in ships["computer"]:
-    print(f"row: {i.start_row}, column: {i.start_column}, orientation: {i.orientation}, length: {i.length}")
-print()
-# for testing:
-for i in ships["human"]:
-    print(f"row: {i.start_row}, column: {i.start_column}, orientation: {i.orientation}, length: {i.length}")
 
 ship_setup.mainWindow.mainloop()
