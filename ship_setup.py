@@ -6,7 +6,7 @@ VERTICAL = 1
 
 mainWindow = tkinter.Tk()
 
-mainWindow.title("Warships")
+mainWindow.title("Battleships")
 mainWindow.resizable(False, False)
 
 with open("config.json", encoding="utf-8") as config:

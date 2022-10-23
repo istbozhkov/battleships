@@ -88,7 +88,6 @@ for length in ship_setup.ship_configuration:
     else:
         for i in range(length):
             taken_coordinates.append((random_coordinate[0]+i, random_coordinate[1]))
-    print(taken_coordinates)
     available_coordinates[HORIZONTAL].remove(random_coordinate)
     available_coordinates[VERTICAL].remove(random_coordinate)
     ships["computer"].append(new_ship)

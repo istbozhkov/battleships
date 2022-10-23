@@ -38,7 +38,7 @@ ship_option2 = "2, 2, 3, 3"
 ship_option3 = "2, 6"
 
 main_menu_window = tkinter.Tk()
-main_menu_window.title("Warships")
+main_menu_window.title("Battleships")
 main_menu_window.resizable(False, False)
 main_menu_window.configure(padx=10, pady=10)
 

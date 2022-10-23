@@ -259,9 +259,6 @@ class GameBoard(Board):
         if self.player == "human":  # displaying the human's ships on their board
             for vessel in self.ships:   # Named `vessel` instead of `ship` to avoid confusion with the Ship class
                 for coordinate in vessel.coordinates:
-                    print(vessel.start_row)
-                    print(vessel.length)
-                    print(f"coordinate: {coordinate[0]}")
                     if coordinate == (vessel.start_row, vessel.start_column):
                         picture = "front"
                     elif coordinate[0] == vessel.length + vessel.start_row - 1 or\

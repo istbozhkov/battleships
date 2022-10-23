@@ -23,7 +23,7 @@ with open("end_game.json", encoding="utf-8") as file:
     victory = json.load(file)
 
 game_over_window = tkinter.Tk()
-game_over_window.title("Warships")
+game_over_window.title("Battleships")
 game_over_window.resizable(False, False)
 game_over_window.configure(padx=10, pady=10)
 
