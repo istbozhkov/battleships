@@ -2,7 +2,7 @@ import tkinter
 
 
 class Btn(tkinter.Button):
-    # Creating a button class, which is a subclass of the tkinter Button class
+    """ Creating a button class, which is a subclass of the tkinter Button class"""
     def __init__(self, field, **kwargs):
         super().__init__(field, **kwargs)
         # initializing self.image:
@@ -15,8 +15,6 @@ class Btn(tkinter.Button):
         self.configure(image=button_image)
         # Keeping a reference of the image, otherwise Python doesn't display it:
         self.image = button_image
-        # TODO Ask - how does self.btn['image'] work "under the hood"?
-        # TODO Ask - what exactly is btn.image ? Is it an attribute of the button class?
 
     def hit_target(self, row, column):
         # button when a ship is hit

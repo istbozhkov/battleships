@@ -32,7 +32,8 @@ if victory == "human":
 else:
     end_game_text = "You lost!"
 
-tkinter.Label(game_over_window, text=end_game_text, font=("Rockwell Extra Bold", 22), anchor='center', pady=20, padx=70) \
+tkinter.Label(game_over_window, text=end_game_text, font=("Rockwell Extra Bold", 22),
+              anchor='center', pady=20, padx=70) \
     .grid(row=0, column=0, columnspan=2, sticky='ew')
 
 new_game_button = tkinter.Button(game_over_window, text="New Game", width=15, command=new_game)

@@ -6,7 +6,11 @@ import json
 def run_ship_placement(difficulty: str, size: int, ships: str) -> None:
     """
     Save settings to a json file, run ship placement module and destroy main menu window.
-    :param filename: filename of main game module
+
+    :param difficulty: difficulty level, taken from main menu radio buttons.
+    :param size: board size, taken from main menu radio buttons.
+    :param ships: ship configuration, taken from main menu radio buttons.
+    :return: None
     """
     # Converting ships sizes from string to list of integers:
     ships_list = [int(i) for i in ships.split(", ")]
@@ -37,6 +41,7 @@ ship_option1 = "2, 3, 4, 5"
 ship_option2 = "2, 2, 3, 3"
 ship_option3 = "2, 6"
 
+# Creating tkinter window:
 main_menu_window = tkinter.Tk()
 main_menu_window.title("Battleships")
 main_menu_window.resizable(False, False)
@@ -46,7 +51,8 @@ tkinter.Label(main_menu_window, text="BATTLESHIPS GAME", font=("Castellar", 18),
     .grid(row=0, column=0, columnspan=8, sticky='ew')
 
 # Creating Difficulty level label
-tkinter.Label(main_menu_window, text="Difficulty level", font=("Arial Bold", 10)).grid(row=1, column=0, columnspan=3, sticky='w')
+tkinter.Label(main_menu_window, text="Difficulty level", font=("Arial Bold", 10)).\
+    grid(row=1, column=0, columnspan=3, sticky='w')
 # Creating a value for the Difficulty level radio buttons and setting "Easy" as the default:
 difficulty_level = tkinter.Variable(value="Easy")
 # Creating Difficulty level radio buttons:
@@ -56,7 +62,8 @@ tkinter.Radiobutton(main_menu_window, text="Hard", variable=difficulty_level, va
     .grid(row=3, column=0, columnspan=2, sticky='w')
 
 # Creating Board size label:
-tkinter.Label(main_menu_window, text="Board size", font=("Arial Bold", 10)).grid(row=1, column=3, columnspan=3, sticky='w')
+tkinter.Label(main_menu_window, text="Board size", font=("Arial Bold", 10)).\
+    grid(row=1, column=3, columnspan=3, sticky='w')
 # Creating a value for the Board size radio buttons and setting 8x8 as the default:
 board_size = tkinter.IntVar(value=board_size_option1_int)
 # Creating Board size radio buttons:
@@ -68,7 +75,8 @@ tkinter.Radiobutton(main_menu_window, text=board_size_option3_text, variable=boa
     .grid(row=4, column=3, columnspan=3, sticky='w')
 
 # Creating Ship configuration label:
-tkinter.Label(main_menu_window, text="Ship configuration", font=("Arial Bold", 10)).grid(row=1, column=6, columnspan=3, sticky='w')
+tkinter.Label(main_menu_window, text="Ship configuration", font=("Arial Bold", 10)).\
+    grid(row=1, column=6, columnspan=3, sticky='w')
 # Creating a value for the Ship configuration radio buttons and setting 2,3,4,5 as the default:
 ship_lengths = tkinter.Variable(value=ship_option1)
 # Creating Ship configuration radio buttons:

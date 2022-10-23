@@ -16,7 +16,6 @@ class Ship:
                 self.coordinates.add((start_row+i+1, start_column))
         self.hits = set()   # initializing a set where all the hits will be stored for this ship
         self.is_sunk = False
-        # self.draw = draw TODO
 
     def is_hit(self, row, column):
         # check if there is a ship at the target coordinates

@@ -3,11 +3,34 @@ import tkinter
 import json
 import ship_setup
 from ship_setup import HORIZONTAL, VERTICAL
-import os
 
 
 class Board:
-    def __init__(self, size, window, button_class, player=None):     # TODO add function annotations
+    """
+    A class to represent the game board
+
+    ...
+
+    Attributes
+    ----------
+    size : int
+        board size
+    window : Tkinter window
+        the window where the board will be displayed.
+    button_class : Class
+        the tile class
+    player: str
+        `computer` or `human`
+
+    Methods
+    -------
+    draw_field(button_function, start_cell)
+        Draw a field of clickable tiles.
+
+    draw_message_field(initial_message, start_cell):
+        Draw a message field below the game field.
+    """
+    def __init__(self, size, window, button_class, player=None):
         self.size = size
         self.window = window
         self.player = player    # governs whether the board will be operated by a person or by the computer
@@ -19,6 +42,16 @@ class Board:
         self.game_field = None
 
     def draw_field(self, button_function, start_cell):
+        """
+        Draw a field of clickable tiles.
+
+        Draw a field of clickable tiles arranged in a square pattern of "self.size".
+        If the field is to be used by the computer to attack, the tiles are disabled.
+        The field is later used by both the SetUpBoard subclass and the GameBoard subclass.
+        :param button_function: function to pass to the tiles when clicked
+        :param start_cell: int, first column of the given field.
+        :return: None
+        """
         letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
 
         self.game_field = tkinter.Frame(self.window)
@@ -39,11 +72,19 @@ class Board:
                 self.button = self.button_class(self.game_field)
                 self.button.default_button(row, column)
                 if self.player != "human":  # if it's the computer's board, the buttons are clickable.
-                    self.button.configure(command=lambda btn_row=row, btn_column=column: button_function(btn_row, btn_column))
+                    self.button.\
+                        configure(command=lambda btn_row=row, btn_column=column: button_function(btn_row, btn_column))
                 else:
                     self.button["state"] = "disabled"
 
     def draw_message_field(self, initial_message, start_cell):
+        """
+        Draw a message field below the game field.
+
+        :param initial_message: str, The initial message for the message field
+        :param start_cell: int, The first column of the given field.
+        :return: None
+        """
         self.message_text.set(initial_message)
         border_color = tkinter.Frame(self.window, background="green")
         border_color.grid(row=self.size + 1, column=1+start_cell, padx=25, pady=5)
@@ -65,7 +106,6 @@ class SetUpBoard(Board):
         self.latest_rb = None
         self.button_start = None    # Needed to be global so that it can be updated when placing the last ship.
         self.placed_ships_coordinates = set()   # creating an empty set for the placed ships coordinates
-        # TODO could pass them to the Ship class later if needed (as they are calculated again there)
         self.ship_configuration_list = []   # needed to pass to ship_config.json
 
     def draw_placement_field(self, run_function):
@@ -85,7 +125,6 @@ class SetUpBoard(Board):
         tkinter.Label(settings_field, text="Select a ship to place", font=("Arial Bold", 10)) \
             .grid(row=0, column=0, columnspan=2, sticky='w')
         self.ship_size = tkinter.IntVar(value=self.ship_configuration[0])
-        # TODO: once we have the settings from the main_menu, pass the ship size variable to `text` and `value` below
         rb1 = tkinter.Radiobutton(settings_field, text="Length " + str(self.ship_configuration[0]),
                                   variable=self.ship_size, value=self.ship_configuration[0],
                                   command=lambda: rb_change("rb1"))
@@ -93,7 +132,6 @@ class SetUpBoard(Board):
         # Adding +0.1 (or 0.2/3) to the value so that in case there are more than one ships with the same length,
         # The radio button will still show the correct selection.
         # The float will be converted to integer by the IntVar, so it will cause no issues with the functionality.
-        # TODO: save this example as a clever solution.
         rb2 = tkinter.Radiobutton(settings_field, text="Length " + str(self.ship_configuration[1]),
                                   variable=self.ship_size, value=self.ship_configuration[1]+0.1,
                                   command=lambda: rb_change("rb2"))
@@ -114,8 +152,7 @@ class SetUpBoard(Board):
         self.latest_rb = rb1    # setting default value for latest_rb (in case ship is placed, without changing the rb)
 
         def rb_change(rb):
-            # When a RB is changed, it is saved in an attribute, so that it can be disabled if a ship is placed
-            # TODO change this to a docstring
+            """ When a RB is changed, it is saved in an attribute, so that it can be disabled if a ship is placed """
             if rb == "rb1":
                 self.latest_rb = rb1
             elif rb == "rb2":
@@ -247,7 +284,7 @@ class GameBoard(Board):
                         self.available_coordinates.append((row, column))
                 else:
                     for column in range(self.size + 1, (2 * self.size) + 1):
-                        self.available_coordinates.append((row, column))  # TODO Check that this works properly
+                        self.available_coordinates.append((row, column))
 
         if location == "left":
             start_cell = 0
@@ -282,9 +319,6 @@ class GameBoard(Board):
     def shoot(self, row, column):
         """
         Shoot at given coordinates and change tile accordingly.
-        :param row:
-        :param column:
-        :return:
         """
         # Checking if a ship is hit.
         for vessel in self.ships:   # Named `vessel` instead of `ship` to avoid confusion with the Ship class
@@ -350,4 +384,3 @@ class GameBoard(Board):
                             break
                     else:
                         shoot_random()  # if none of the adjacent coordinates is available -> shoot at random
-
