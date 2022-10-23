@@ -13,7 +13,7 @@ You can start the game by running:
 
 ## Features
 
-- Two difficulty levels: Easy (computer shoots at random) and Difficult (computer applies simple algorithm when shooting)
+- Two difficulty levels: Easy (computer shoots at random) and Hard (computer applies simple algorithm when shooting)
 - Three board sizes: 6x6, 8x8, 10x10
 - Three different ship configurations (size and length).
 
