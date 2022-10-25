@@ -1,6 +1,6 @@
 # Battleships
 
-Battleships game written on Python, using TKinter - Python's standard GUI framework. Player vs Computer gameplay.
+Battleships game written on Python, using Tkinter - Python's standard GUI framework. Player vs Computer gameplay.
 
 ![alt text](https://github.com/istbozhkov/battleships/blob/main/demo.jpg "demo picture")
 
